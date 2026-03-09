@@ -16,6 +16,8 @@ type Bubble = {
   tag: string
   x: number
   y: number
+  mobileX?: number
+  mobileY?: number
   floatX: number
   floatY: number
   duration: number
@@ -23,17 +25,21 @@ type Bubble = {
   popDelay: number
   motion: 'a' | 'b' | 'c'
   tone: BubbleTone
+  hideOnMobile?: boolean
 }
 
 type BubbleConfig = {
   tag: string
   x: number
   y: number
+  mobileX?: number
+  mobileY?: number
   floatX: number
   floatY: number
   duration: number
   delay: number
   motion: 'a' | 'b' | 'c'
+  hideOnMobile?: boolean
 }
 
 const displayFont = '[font-family:var(--font-home-test-display)]'
@@ -56,15 +62,15 @@ const toneOrder: number[] = [0, 5, 2, 7, 4, 1, 8, 3, 6]
 
 // Tune these values to change each bubble's position and motion.
 const bubbleConfigs: BubbleConfig[] = [
-  { tag: '#Beauty', x: 18, y: 56, floatX: 1, floatY: 3, duration: 9.8, delay: 0.4, motion: 'c' },
-  { tag: '#Food', x: 30, y: 32, floatX: -2, floatY: 4, duration: 9.2, delay: 2.1, motion: 'b' },
-  { tag: '#Mode', x: 44, y: 28, floatX: 1, floatY: 4, duration: 10.4, delay: 1.3, motion: 'c' },
-  { tag: '#santé', x: 60, y: 30, floatX: -2, floatY: 6, duration: 8.9, delay: 3.6, motion: 'a' },
-  { tag: '#Travel', x: 76, y: 34, floatX: 4, floatY: 5, duration: 10.8, delay: 4.2, motion: 'b' },
-  { tag: '#Finance', x: 76, y: 58, floatX: -1, floatY: 6, duration: 9.7, delay: 0.9, motion: 'a' },
-  { tag: '#Gaming', x: 62, y: 70, floatX: 0, floatY: 4, duration: 10.1, delay: 2.8, motion: 'a' },
-  { tag: '#Tech', x: 46, y: 74, floatX: -3, floatY: 5, duration: 9.4, delay: 5.0, motion: 'b' },
-  { tag: '#Lifestyle', x: 28, y: 68, floatX: 3, floatY: 6, duration: 11.2, delay: 1.8, motion: 'c' },
+  { tag: '#Beauty', x: 18, y: 56, mobileX: 14, mobileY: 56, floatX: 1, floatY: 3, duration: 9.8, delay: 0.4, motion: 'a', hideOnMobile: false },
+  { tag: '#Food', x: 30, y: 32, mobileX: 16, mobileY: 40, floatX: -2, floatY: 4, duration: 9.2, delay: 2.1, motion: 'b', hideOnMobile: false },
+  { tag: '#Mode', x: 44, y: 28, mobileX: 48, mobileY: 36, floatX: 1, floatY: 4, duration: 10.4, delay: 1.3, motion: 'a', hideOnMobile: false },
+  { tag: '#santé', x: 60, y: 30, mobileX: 78, mobileY: 40, floatX: -2, floatY: 6, duration: 8.9, delay: 3.6, motion: 'a', hideOnMobile: false },
+  { tag: '#Travel', x: 76, y: 34, mobileX: 86, mobileY: 40, floatX: 4, floatY: 5, duration: 10.8, delay: 4.2, motion: 'b', hideOnMobile: true },
+  { tag: '#Finance', x: 76, y: 58, mobileX: 80, mobileY: 60, floatX: -1, floatY: 6, duration: 9.7, delay: 0.9, motion: 'a', hideOnMobile: false },
+  { tag: '#Gaming', x: 62, y: 70, mobileX: 66, mobileY: 72, floatX: 0, floatY: 4, duration: 10.1, delay: 2.8, motion: 'a', hideOnMobile: true },
+  { tag: '#Tech', x: 46, y: 74, mobileX: 44, mobileY: 76, floatX: -3, floatY: 5, duration: 9.4, delay: 5.0, motion: 'b', hideOnMobile: true },
+  { tag: '#Lifestyle', x: 28, y: 68, mobileX: 46, mobileY: 66, floatX: 3, floatY: 6, duration: 11.2, delay: 1.8, motion: 'b', hideOnMobile: false },
 ]
 
 // Pop sequence (first pops first). Reorder this list to control pop order.
@@ -117,6 +123,8 @@ function buildBubbles(): Bubble[] {
       tag: config.tag,
       x: config.x,
       y: config.y,
+      mobileX: config.mobileX,
+      mobileY: config.mobileY,
       floatX: config.floatX,
       floatY: config.floatY,
       duration: config.duration,
@@ -124,14 +132,24 @@ function buildBubbles(): Bubble[] {
       popDelay: popBase + popRank * popStep,
       motion: config.motion,
       tone: tones[toneIndex],
+      hideOnMobile: config.hideOnMobile,
     }
   })
+}
+
+function spreadFromCenter(value: number, spread: number, min: number, max: number) {
+  const next = 50 + (value - 50) * spread
+  return Math.min(max, Math.max(min, next))
 }
 
 export function SectorHashtags({ audience: _audience }: SectorHashtagsProps) {
   const bubbles = useMemo(() => buildBubbles(), [])
   const fieldRef = useRef<HTMLDivElement | null>(null)
   const [isVisible, setIsVisible] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  const mobilePopDelayOffsetMs = 520
+  const mobilePositionSpread = 1.18
 
   useEffect(() => {
     const node = fieldRef.current
@@ -158,6 +176,16 @@ export function SectorHashtags({ audience: _audience }: SectorHashtagsProps) {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px)')
+    const updateIsMobile = () => setIsMobile(mediaQuery.matches)
+
+    updateIsMobile()
+    mediaQuery.addEventListener('change', updateIsMobile)
+
+    return () => mediaQuery.removeEventListener('change', updateIsMobile)
+  }, [])
+
   return (
     <section className="px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-7xl">
@@ -168,22 +196,38 @@ export function SectorHashtags({ audience: _audience }: SectorHashtagsProps) {
           }`}
         >
           {bubbles.map((bubble) => (
-            <article
-              key={bubble.tag}
-              className={`home-test-hashtag-orb home-test-hashtag-orb-motion-${bubble.motion}`}
-              style={{
-                top: `${bubble.y}%`,
-                left: `${bubble.x}%`,
-                background: bubble.tone.bg,
-                animationDuration: `${bubble.duration}s`,
-                animationDelay: `-${bubble.delay}s`,
-                ['--orb-x' as any]: `${bubble.floatX}px`,
-                ['--orb-y' as any]: `${bubble.floatY}px`,
-                ['--pop-delay' as any]: `${bubble.popDelay}ms`,
-              }}
-            >
-              <span className={`${monoFont} font-extrabold leading-none tracking-[0.09em] text-white`}>{bubble.tag}</span>
-            </article>
+            (() => {
+              if (isMobile && bubble.hideOnMobile) {
+                return null
+              }
+
+              const x = isMobile
+                ? (bubble.mobileX ?? spreadFromCenter(bubble.x, mobilePositionSpread, 6, 94))
+                : bubble.x
+              const y = isMobile
+                ? (bubble.mobileY ?? spreadFromCenter(bubble.y, mobilePositionSpread, 16, 84))
+                : bubble.y
+              const popDelay = isMobile ? bubble.popDelay + mobilePopDelayOffsetMs : bubble.popDelay
+
+              return (
+                <article
+                  key={bubble.tag}
+                  className={`home-test-hashtag-orb home-test-hashtag-orb-motion-${bubble.motion}`}
+                  style={{
+                    top: `${y}%`,
+                    left: `${x}%`,
+                    background: bubble.tone.bg,
+                    animationDuration: `${bubble.duration}s`,
+                    animationDelay: `-${bubble.delay}s`,
+                    ['--orb-x' as any]: `${bubble.floatX}px`,
+                    ['--orb-y' as any]: `${bubble.floatY}px`,
+                    ['--pop-delay' as any]: `${popDelay}ms`,
+                  }}
+                >
+                  <span className={`${monoFont} font-extrabold leading-none tracking-[0.09em] text-white`}>{bubble.tag}</span>
+                </article>
+              )
+            })()
           ))}
 
           <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center px-6 text-center">

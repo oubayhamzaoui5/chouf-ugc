@@ -66,8 +66,6 @@ export function AudienceJoinPanel({ audience }: AudienceJoinPanelProps) {
   const images = joinImages[audience]
   const leftColumnImages = [images[0], images[2]].filter((image): image is JoinImage => Boolean(image))
   const rightColumnImages = [images[1], images[3]].filter((image): image is JoinImage => Boolean(image))
-  const titleSizeClass =
-    audience === 'brand' ? 'text-[clamp(34px,4.3vw,86px)]' : 'text-[clamp(34px,4.3vw,86px)]'
   const sectionRef = useRef<HTMLElement | null>(null)
   const leftColumnRef = useRef<HTMLDivElement | null>(null)
   const rightColumnRef = useRef<HTMLDivElement | null>(null)
@@ -145,12 +143,14 @@ export function AudienceJoinPanel({ audience }: AudienceJoinPanelProps) {
         <article className="home-test-join-panel relative py-1 sm:py-2 lg:py-3">
           <div className="grid gap-3 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:justify-items-center">
             <div className="order-2 flex min-h-[280px] w-full flex-col items-center justify-center text-center lg:order-1 lg:min-h-[620px] lg:items-start lg:text-left">
-              <h3 className={`${displayFont} max-w-[12ch] ${titleSizeClass} text-[clamp(30px,4.3vw,86px)] font-semibold leading-[0.95] tracking-tight text-[#111111] mb-4`}>
+              <h3
+                className={`${displayFont} mt-10 mb-4 max-w-[12ch] text-[clamp(38px,9.8vw,62px)] font-semibold leading-[0.95] tracking-tight text-[#111111] sm:mt-0 sm:text-[clamp(34px,4.3vw,86px)]`}
+              >
                 <span className="block">{content.titleTop}</span>
                 <span className="block text-[color:var(--home-test-accent)]">{'+100 cr\u00E9ateurs'}</span>
                 {content.titleBottom ? <span className="block">{content.titleBottom}</span> : null}
               </h3>
-              <a href={content.ctaHref} className="home-test-join-cta mt-4">
+              <a href={content.ctaHref} className="home-test-join-cta mt-2 md:mt-4 ">
                 <span className="home-test-join-cta-circle" aria-hidden="true">
                   <span className="home-test-join-cta-icon home-test-join-cta-arrow"></span>
                 </span>

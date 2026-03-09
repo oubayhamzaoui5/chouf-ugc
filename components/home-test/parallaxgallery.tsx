@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { withBasePath } from "@/lib/base-path";
@@ -10,8 +10,13 @@ type Card = {
   top: string;
   left?: string;
   right?: string;
+  mobileTop?: string;
+  mobileLeft?: string;
+  mobileRight?: string;
   width: number;
   height: number;
+  mobileWidth?: number;
+  mobileHeight?: number;
   speed: number;
   startOffset: number;
   travel: number;
@@ -35,8 +40,12 @@ const cards: Card[] = [
     speed: 0.7,
     startOffset: 100,
     travel: 1400,
-    zIndex: 2,
+    zIndex: 3,
     tag: "#Tunis_Street",
+    mobileTop: "18%",
+    mobileLeft: "-6%",
+    mobileWidth: 186,
+    mobileHeight: 236,
   },
   {
     id: 2,
@@ -51,6 +60,10 @@ const cards: Card[] = [
     travel: 600,
     zIndex: 3,
     tag: "#Sousse_Cafe",
+    mobileTop: "86%",
+    mobileLeft: "-6%",
+    mobileWidth: 228,
+    mobileHeight: 298,
   },
   {
     id: 3,
@@ -65,6 +78,10 @@ const cards: Card[] = [
     travel: 1220,
     zIndex: 2,
     tag: "#Tozeur_Shoot",
+    mobileTop: "150%",
+    mobileRight: "32%",
+    mobileWidth: 180,
+    mobileHeight: 240,
   },
   {
     id: 4,
@@ -79,6 +96,46 @@ const cards: Card[] = [
     travel: 860,
     zIndex: 3,
     tag: "#Medina_Life",
+    mobileTop: "26%",
+    mobileRight: "-22%",
+    mobileWidth: 210,
+    mobileHeight: 280,
+  },
+  {
+    id: 5,
+    src: "/ugc5.jpg",
+    alt: "Beach product sequence",
+    top: "140%",
+    left: "1%",
+    width: 180,
+    height: 240,
+    speed: 1.95,
+    startOffset: 610,
+    travel: 1080,
+    zIndex: 2,
+    tag: "#Hammamet_Vibes",
+    mobileTop: "112%",
+    mobileLeft: "2%",
+    mobileWidth: 112,
+    mobileHeight: 149,
+  },
+  {
+    id: 6,
+    src: "/ugc6.jpg",
+    alt: "Kitchen UGC lifestyle shot",
+    top: "140%",
+    right: "15%",
+    width: 300,
+    height: 380,
+    speed: 2,
+    startOffset: 40,
+    travel: 700,
+    zIndex: 1,
+    tag: "#Sfax_Home",
+    mobileTop: "196%",
+    mobileRight: "-2%",
+    mobileWidth: 186,
+    mobileHeight: 236,
   },
 ];
 
@@ -145,21 +202,24 @@ export default function ParallaxGallery({ audience = "creator" }: ParallaxGaller
     <section>
       <div
         ref={sectionRef}
-        className="relative mx-auto min-h-[540px] max-h-[40vh] overflow-visible sm:min-h-[760px]"
+        className="relative mx-auto min-h-[540px] max-h-[40vh] overflow-x-clip overflow-y-visible sm:min-h-[760px] sm:overflow-visible"
         style={{ ["--scroll-progress" as string]: 0 } as CSSProperties}
       >
         {cards.map((card) => {
           const mobileScale = 0.62;
-          const width = isMobile ? Math.round(card.width * mobileScale) : card.width;
-          const height = isMobile ? Math.round(card.height * mobileScale) : card.height;
+          const width = isMobile ? card.mobileWidth ?? Math.round(card.width * mobileScale) : card.width;
+          const height = isMobile ? card.mobileHeight ?? Math.round(card.height * mobileScale) : card.height;
+          const top = isMobile ? card.mobileTop ?? card.top : card.top;
+          const left = isMobile ? card.mobileLeft ?? card.left : card.left;
+          const right = isMobile ? card.mobileRight ?? card.right : card.right;
           return (
             <article
               key={card.id}
               className="absolute overflow-hidden rounded-[1.35rem] "
               style={{
-                top: card.top,
-                left: card.left,
-                right: card.right,
+                top,
+                left,
+                right,
                 width: `${width}px`,
                 height: `${height}px`,
                 zIndex: card.zIndex,

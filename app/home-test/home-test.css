@@ -284,6 +284,10 @@
 }
 
 @media (max-width: 767px) {
+  .home-test-sector-shell {
+    overflow: visible;
+  }
+
   .home-test-sector-field {
     min-height: 560px;
   }
@@ -388,6 +392,20 @@
   .home-test-join-cta-text {
     margin-left: 1.8rem;
     font-size: clamp(1.05rem, 5vw, 1.3rem);
+  }
+
+  .home-test-join-cta .home-test-join-cta-circle {
+    width: 100%;
+    background: var(--home-test-accent-strong);
+  }
+
+  .home-test-join-cta .home-test-join-cta-arrow {
+    background: #fff;
+    transform: translateX(1rem);
+  }
+
+  .home-test-join-cta .home-test-join-cta-text {
+    color: #fff;
   }
 }
 

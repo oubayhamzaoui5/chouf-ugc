@@ -51,8 +51,8 @@ export function HomeTestLandingPage({ displayFontClass, monoFontClass }: HomeTes
       <main id="top">
         <HomeTestNavbar audience={audience} onAudienceChange={setAudience} monoFontClass={monoFont} />
 
-        <section className="relative flex min-h-screen items-center justify-center px-4 text-center sm:px-6 lg:px-8">
-          <div className="mx-auto w-full max-w-8xl">
+        <section className="relative h-[100svh] min-h-[100svh] px-4 text-center sm:h-screen sm:min-h-screen sm:px-6 lg:px-8">
+          <div className="mx-auto flex h-full w-full max-w-8xl items-center justify-center">
             <h1 className={` ${displayFont} text-4xl font-semibold leading-[1.02] tracking-tight text-[#111111] sm:text-7xl lg:text-8xl`}>
               La <span className='font-bold'>Plateforme</span> UGC <span className="home-test-accent-text font-extrabold text-[color:var(--home-test-accent)]">N°1</span> de la Tunisie.
             </h1>
