@@ -141,12 +141,12 @@ export function TestimonialsSection() {
             {visibleTestimonials.map((testimonial) => (
               <article
                 key={testimonial.id}
-                className="aspect-square rounded-[1.4rem] border border-black/10 bg-white/90 p-4 shadow-[0_14px_28px_rgba(0,0,0,0.06)] sm:rounded-[1.7rem] sm:p-7"
+                className="min-h-[320px] rounded-[1.4rem] border border-black/10 bg-white/90 p-4 shadow-[0_14px_28px_rgba(0,0,0,0.06)] sm:aspect-square sm:rounded-[1.7rem] sm:p-7"
                 style={{ width: cardWidth, minWidth: cardWidth }}
               >
                 <div className="flex h-full flex-col">
                   <div className="flex items-start justify-between gap-4">
-                    <h4 className={`${displayFont} text-[18px] font-semibold leading-tight text-[#111111] sm:text-[26px]`}>
+                    <h4 className={`${displayFont} text-[16px] font-semibold leading-tight text-[#111111] break-words sm:text-[26px]`}>
                       {testimonial.businessName}
                     </h4>
                     <div className="flex shrink-0 items-center gap-1.5 text-[color:var(--home-test-accent)]">
@@ -167,7 +167,9 @@ export function TestimonialsSection() {
                     <span className="absolute -left-2 -top-2 inline-flex h-8 w-8 items-center justify-center">
                       <Quote className="size-7 text-black" strokeWidth={2.2} />
                     </span>
-                    <p className="pt-5 pl-2 text-sm font-semibold leading-relaxed text-black sm:text-xl">{testimonial.text}</p>
+                    <p className="pt-5 pl-2 text-[13px] font-medium leading-[1.55] text-black break-words sm:text-xl sm:font-semibold">
+                      {testimonial.text}
+                    </p>
                   </div>
                 </div>
               </article>
