@@ -22,11 +22,14 @@ type Card = {
   travel: number;
   zIndex: number;
   tag: string;
+  showOnMobile: boolean;
 };
 
 type ParallaxGalleryProps = {
   audience?: "brand" | "creator";
 };
+
+const SHOW_IMAGES_ON_MOBILE = true;
 
 const cards: Card[] = [
   {
@@ -42,8 +45,9 @@ const cards: Card[] = [
     travel: 1400,
     zIndex: 3,
     tag: "#Tunis_Street",
-    mobileTop: "18%",
-    mobileLeft: "-6%",
+    showOnMobile: SHOW_IMAGES_ON_MOBILE,
+    mobileTop: "36%",
+    mobileLeft: "2%",
     mobileWidth: 186,
     mobileHeight: 236,
   },
@@ -60,6 +64,7 @@ const cards: Card[] = [
     travel: 600,
     zIndex: 3,
     tag: "#Sousse_Cafe",
+    showOnMobile: SHOW_IMAGES_ON_MOBILE,
     mobileTop: "86%",
     mobileLeft: "-6%",
     mobileWidth: 228,
@@ -78,6 +83,7 @@ const cards: Card[] = [
     travel: 1220,
     zIndex: 2,
     tag: "#Tozeur_Shoot",
+    showOnMobile: false,
     mobileTop: "150%",
     mobileRight: "32%",
     mobileWidth: 180,
@@ -96,8 +102,9 @@ const cards: Card[] = [
     travel: 860,
     zIndex: 3,
     tag: "#Medina_Life",
+    showOnMobile: SHOW_IMAGES_ON_MOBILE,
     mobileTop: "26%",
-    mobileRight: "-22%",
+    mobileRight: "-4%",
     mobileWidth: 210,
     mobileHeight: 280,
   },
@@ -114,6 +121,7 @@ const cards: Card[] = [
     travel: 1080,
     zIndex: 2,
     tag: "#Hammamet_Vibes",
+    showOnMobile: false,
     mobileTop: "112%",
     mobileLeft: "2%",
     mobileWidth: 112,
@@ -132,6 +140,7 @@ const cards: Card[] = [
     travel: 700,
     zIndex: 1,
     tag: "#Sfax_Home",
+    showOnMobile: SHOW_IMAGES_ON_MOBILE,
     mobileTop: "196%",
     mobileRight: "-2%",
     mobileWidth: 186,
@@ -206,6 +215,9 @@ export default function ParallaxGallery({ audience = "creator" }: ParallaxGaller
         style={{ ["--scroll-progress" as string]: 0 } as CSSProperties}
       >
         {cards.map((card) => {
+          if (isMobile && !card.showOnMobile) {
+            return null;
+          }
           const mobileScale = 0.62;
           const width = isMobile ? card.mobileWidth ?? Math.round(card.width * mobileScale) : card.width;
           const height = isMobile ? card.mobileHeight ?? Math.round(card.height * mobileScale) : card.height;
