@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from 'react'
+import { withBasePath } from '@/lib/base-path'
 
 type Audience = 'brand' | 'creator'
 
@@ -71,10 +72,12 @@ export function AudienceJoinPanel({ audience }: AudienceJoinPanelProps) {
   const leftColumnRef = useRef<HTMLDivElement | null>(null)
   const rightColumnRef = useRef<HTMLDivElement | null>(null)
   const renderMedia = (image: JoinImage) => {
+    const src = withBasePath(image.src)
+
     if (image.src.toLowerCase().endsWith('.mp4')) {
       return (
         <video
-          src={image.src}
+          src={src}
           className="h-full w-full object-cover"
           autoPlay
           muted
@@ -86,7 +89,7 @@ export function AudienceJoinPanel({ audience }: AudienceJoinPanelProps) {
       )
     }
 
-    return <img src={image.src} alt={image.alt} className="h-full w-full object-cover" />
+    return <img src={src} alt={image.alt} className="h-full w-full object-cover" />
   }
 
   useEffect(() => {

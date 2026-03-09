@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { withBasePath } from "@/lib/base-path";
 
 type Card = {
   id: number;
@@ -170,7 +171,7 @@ export default function ParallaxGallery({ audience = "creator" }: ParallaxGaller
                 willChange: "transform",
               }}
             >
-              <img src={card.src} alt={card.alt} className="h-full w-full object-cover" />
+              <img src={withBasePath(card.src)} alt={card.alt} className="h-full w-full object-cover" />
            
             </article>
           );

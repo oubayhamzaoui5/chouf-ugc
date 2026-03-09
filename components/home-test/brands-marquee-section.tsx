@@ -1,10 +1,11 @@
 "use client"
 
 import Image from 'next/image'
+import { withBasePath } from '@/lib/base-path'
 
 const items = Array.from({ length: 12 }, (_, index) => ({
   id: `brand-${index + 1}`,
-  src: '/logo.png',
+  src: withBasePath('/logo.png'),
   alt: `Brand logo ${index + 1}`,
 }))
 

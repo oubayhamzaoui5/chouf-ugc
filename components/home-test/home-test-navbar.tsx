@@ -1,6 +1,7 @@
 "use client"
 
 import Image from 'next/image'
+import { withBasePath } from '@/lib/base-path'
 
 type Audience = 'brand' | 'creator'
 
@@ -16,7 +17,7 @@ export function HomeTestNavbar({ audience, onAudienceChange, monoFontClass }: Ho
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
         <div className="relative flex items-center justify-between">
           <a href="#top" className="pointer-events-auto inline-flex items-center justify-center" aria-label="Retour en haut">
-            <Image src="/logo.png" alt="Logo" width={64} height={64} className="h-14 w-14 object-contain sm:h-24 sm:w-24" />
+            <Image src={withBasePath('/logo.png')} alt="Logo" width={64} height={64} className="h-14 w-14 object-contain sm:h-24 sm:w-24" />
           </a>
 
           <div className="pointer-events-auto absolute left-1/2 w-[min(58vw,500px)] -translate-x-1/2 sm:w-[min(62vw,500px)]">
